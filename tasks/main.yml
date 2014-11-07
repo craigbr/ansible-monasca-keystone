@@ -1,0 +1,10 @@
+---
+ - name: Keystone User - Create the keystone user python script
+   template: src=create_keystone_user.py.j2 dest={{ keystone_user_script }} mode=0700
+
+ - name: Keystone User - Execute the script
+   command: python {{ keystone_user_script }}
+
+# - name: Keystone User - Remove the script
+#   file: path={{ keystone_user_script }} state=absent
+       

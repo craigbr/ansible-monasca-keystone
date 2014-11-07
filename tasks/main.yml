@@ -1,10 +1,40 @@
 ---
- - name: Keystone User - Create the keystone user python script
-   template: src=create_keystone_user.py.j2 dest={{ keystone_user_script }} mode=0700
+- name: Keystone User - Install dependencies
+  apt: name={{item}} state=present
+  with_items: dependencies
 
- - name: Keystone User - Execute the script
-   command: python {{ keystone_user_script }}
+- name: Keystone User - Create tenant(s)
+  keystone_user:
+    tenant={{ item.value.tenant }}
+    endpoint={{ keystone_url }}
+    token={{ keystone_admin_token }}
+  with_dict: keystone_users
 
-# - name: Keystone User - Remove the script
-#   file: path={{ keystone_user_script }} state=absent
-       
+
+- name: Keystone User - Create Monasca user(s)
+  keystone_user:
+    user={{ item.key }}
+    password={{ item.value.password }}
+    tenant={{ item.value.tenant }}
+    endpoint={{ keystone_url }}
+    token={{ keystone_admin_token }}
+  with_dict: keystone_users
+
+- name: Keystone User - Add role(s)
+  keystone_user:
+    user={{ item.key }}
+    role={{ item.value.role | default("") }}
+    tenant={{ item.value.tenant }}
+    endpoint={{ keystone_url }}
+    token={{ keystone_admin_token }}
+  with_dict: keystone_users
+
+- name: Keystone Service - Create the keystone service python script
+  template: src=create_keystone_service.py.j2 dest={{ keystone_service_script }} mode=0700
+
+- name: Keystone Service - Execute the script
+  command: python {{ keystone_service_script }}
+
+- name: Keystone Service - Remove the script
+  file: path={{ keystone_service_script }} state=absent
+

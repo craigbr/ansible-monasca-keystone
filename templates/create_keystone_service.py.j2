@@ -61,11 +61,5 @@ except keystoneclient.exceptions:
   time.sleep(2)  # Sometimes chef is too fast and the service is not yet up
   key = client.Client(token='{{ keystone_admin_token }}', endpoint='http://127.0.0.1:35357/v2.0/')
     
-tenant_id = create_tenant('{{ monasca_agent.project }}')
-create_user('{{ minimon.user }}', '{{ minimon.password }}', '{{ minimon.user }}@mon.com', tenant_id)
-monasca_user_id = create_user('{{ monasca_agent.user }}', '{{ monasca_agent.password }}', '{{ monasca_agent.user }}@mon.com', tenant_id)
-
-create_role(monasca_user_id, '{{ monasca_agent.user }}', tenant_id)
-
-add_service_endpoint(key, 'monasca', '{{ monasca_api_host }}')
+add_service_endpoint(key, '{{ keystone_endpoint.name }}', '{{ keystone_endpoint.host }}')
 

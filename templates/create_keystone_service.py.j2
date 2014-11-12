@@ -19,47 +19,6 @@ def add_service_endpoint(key, service_name, endpoint_host):
                             adminurl="http://%s:8080/v2.0/" % endpoint_host,
                             internalurl="http://%s:8080/v2.0/" % endpoint_host)
 
-def create_user(user_name, password, email,tenant_id):
-  user_id = None
-  user_list = key.users.list()
-
-  # Create the user if it doesn't exist
-  for user in user_list:
-    if user.name == user_name:
-      user_id = user.id
-
-  if user_id is None:
-    user_id = key.users.create(name=user_name, password=password, email=email, tenant_id=tenant_id, enabled=True)
-
-  return user_id
-
-def create_role(user_name, role_name, tenant_id):
-  role_id = None
-  for role in key.roles.list():
-    if role.name == role_name:
-      role_id = role.id
-    
-  #create role it doesn't exist 
-  if role_id is None:
-    role_id = key.roles.create(role_name)
-    key.roles.add_user_role(user_name, role_id, tenant_id)
-
-def create_tenant(tenant_name):
-  tenant_id = None
-  for tenant in key.tenants.list():
-    if tenant.name == tenant_name:
-      tenant_id = tenant.id
-
-  if tenant_id is None:
-    tenant_id = key.tenants.create(tenant_name).id
-
-  return tenant_id
-
-try:
-  key = client.Client(token='{{ keystone_admin_token }}', endpoint='http://127.0.0.1:35357/v2.0/')
-except keystoneclient.exceptions:
-  time.sleep(2)  # Sometimes chef is too fast and the service is not yet up
-  key = client.Client(token='{{ keystone_admin_token }}', endpoint='http://127.0.0.1:35357/v2.0/')
-    
+key = client.Client(token='{{ keystone_admin_token }}', endpoint='http://127.0.0.1:35357/v2.0/')
 add_service_endpoint(key, '{{ keystone_endpoint.name }}', '{{ keystone_endpoint.host }}')
 

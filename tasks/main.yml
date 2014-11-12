@@ -10,7 +10,6 @@
     token={{ keystone_admin_token }}
   with_dict: keystone_users
 
-
 - name: Keystone User - Create Monasca user(s)
   keystone_user:
     user={{ item.key }}
@@ -34,7 +33,3 @@
 
 - name: Keystone Service - Execute the script
   command: python {{ keystone_service_script }}
-
-- name: Keystone Service - Remove the script
-  file: path={{ keystone_service_script }} state=absent
-

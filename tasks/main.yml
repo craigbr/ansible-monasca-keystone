@@ -4,7 +4,7 @@
 
 - name: Keystone User - Create tenant(s)
   keystone_user:
-    tenant={{ item.value.tenant }}
+    tenant={{ item.value.project }}
     endpoint={{ keystone_url }}
     token={{ keystone_admin_token }}
   with_dict: keystone_users
@@ -13,7 +13,7 @@
   keystone_user:
     user={{ item.key }}
     password={{ item.value.password }}
-    tenant={{ item.value.tenant }}
+    tenant={{ item.value.project }}
     endpoint={{ keystone_url }}
     token={{ keystone_admin_token }}
   with_dict: keystone_users
@@ -22,13 +22,13 @@
   keystone_user:
     user={{ item.key }}
     role={{ item.value.role | default("") }}
-    tenant={{ item.value.tenant }}
+    tenant={{ item.value.project }}
     endpoint={{ keystone_url }}
     token={{ keystone_admin_token }}
   with_dict: keystone_users
 
 - name: Keystone Service - Create the keystone service python script
-  template: src=create_keystone_service.py.j2 dest={{ keystone_service_script }} mode=0700
+  template: src=create_monasca_service.py.j2 dest={{ keystone_service_script }} mode=0700
 
 - name: Keystone Service - Execute the script
   command: python {{ keystone_service_script }}

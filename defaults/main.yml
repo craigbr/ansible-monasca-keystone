@@ -5,8 +5,5 @@ keystone_users:
     password: password
     tenant: mini-mon
     role: monasca-agent
-keystone_service_script: /tmp/create_keystone_service.py
-keystone_endpoint:
-  name: monasca
-  host: 127.0.0.1
-
+keystone_service_script: /usr/local/bin/create_monasca_service.py
+monasca_api_url: http://localhost:8080/v2.0

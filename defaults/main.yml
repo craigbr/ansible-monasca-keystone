@@ -1,5 +1,5 @@
 keystone_url: http://127.0.0.1:35357/v2.0
-keystone_admin_token: ADMIN
+keystone_cacert:
 keystone_users:
   monasca-agent:
     password: password

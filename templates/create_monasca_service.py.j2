@@ -1,20 +1,82 @@
-import keystoneclient
+from __future__ import print_function
 from keystoneclient.v2_0 import client
+import sys
+
 
 def add_service_endpoint(key, name, description, type, url):
   """Add the Monasca service to the catalog with the specified endpoint, if it doesn't yet exist."""
   service_names = { service.name: service.id for service in key.services.list() }
   if name in service_names.keys():
-    service_id = service_names[name] 
+    service_id = service_names[name]
   else:
     service=key.services.create(name=name, service_type=type, description=description)
     service_id = service.id
- 
+
   for endpoint in key.endpoints.list():
     if endpoint.service_id == service_id:
       return
 
   key.endpoints.create(region="RegionOne", service_id=service_id, publicurl=url, adminurl=url, internalurl=url)
 
-key = client.Client(token='{{ keystone_admin_token }}', endpoint='{{ keystone_url }}')
-add_service_endpoint(key, 'monasca', 'Monasca monitoring service', 'monitoring', '{{ monasca_api_url }}')
+
+def add_monasca_service():
+  """ Get token if needed and then call add_service_endpoint """
+  url = '{{ keystone_url_v2 }}'
+
+{% if keystone_admin_token is defined %}
+  token = '{{ keystone_admin_token }}'
+{% else %}
+  token = None
+{% endif %}
+
+  cacert = '{{ keystone_cacert }}'
+  if not token:
+{% if keystone_admin_username is defined %}
+    username = '{{ keystone_admin_username }}'
+{% else %}
+    username = None
+{% endif %}
+{% if keystone_admin_password is defined %}
+    password = '{{ keystone_admin_password }}'
+{% else %}
+    password = None
+{% endif %}
+{% if keystone_admin_tenant_name is defined %}
+    tenant_name = '{{ keystone_admin_tenant_name }}'
+{% else %}
+    tenant_name = None
+{% endif %}
+
+    if not username or not password:
+      print('If token is not given, keystone_admin_username and keystone_admin_password must be given', file=sys.stderr)
+      return False
+
+    if not tenant_name:
+      print('If token is not given, keystone_admin_tenant_name must be given', file=sys.stderr)
+      return False
+
+    kwargs = {
+        'username': username,
+        'password': password,
+        'tenant_name': tenant_name,
+        'auth_url': url,
+        'cacert': cacert
+    }
+
+    key = client.Client(**kwargs)
+    token = key.auth_token
+
+  key = client.Client(token=token, endpoint=url, cacert=cacert)
+  add_service_endpoint(key, 'monasca', 'Monasca monitoring service', 'monitoring', '{{ monasca_api_url }}')
+  return True
+
+
+def main():
+  if add_monasca_service():
+    return 0
+  else:
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

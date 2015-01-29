@@ -2,11 +2,24 @@
 - name: Keystone User - Install dependencies
   apt: name=python-keystoneclient state=present
 
+# These tasks need a Keystone v2 endpoint
+- set_fact:
+     keystone_url_v2: "{{ keystone_url | replace('/v3', '/v2.0') }}"
+
+- name: Keystone Service - Create the keystone service python script
+  template: src=create_monasca_service.py.j2 dest={{ keystone_service_script }} mode=0700
+
+- name: Keystone Service - Execute the script
+  command: python {{ keystone_service_script }}
+
 - name: Keystone User - Create tenant(s)
   keystone_user:
     tenant={{ item.value.project }}
-    endpoint={{ keystone_url }}
-    token={{ keystone_admin_token }}
+    endpoint={{ keystone_url_v2 }}
+    token={{ keystone_admin_token | default(omit) }}
+    login_password={{ keystone_admin_password | default(omit) }}
+    login_user={{ keystone_admin_username | default(omit) }}
+    login_tenant_name={{ keystone_admin_tenant_name | default(omit) }}
   with_dict: keystone_users
 
 - name: Keystone User - Create Monasca user(s)
@@ -14,8 +27,11 @@
     user={{ item.key }}
     password={{ item.value.password }}
     tenant={{ item.value.project }}
-    endpoint={{ keystone_url }}
-    token={{ keystone_admin_token }}
+    endpoint={{ keystone_url_v2 }}
+    token={{ keystone_admin_token | default(omit) }}
+    login_password={{ keystone_admin_password | default(omit) }}
+    login_user={{ keystone_admin_username | default(omit) }}
+    login_tenant_name={{ keystone_admin_tenant_name | default(omit) }}
   with_dict: keystone_users
 
 - name: Keystone User - Add role(s)
@@ -23,12 +39,9 @@
     user={{ item.key }}
     role={{ item.value.role | default("") }}
     tenant={{ item.value.project }}
-    endpoint={{ keystone_url }}
-    token={{ keystone_admin_token }}
+    endpoint={{ keystone_url_v2 }}
+    token={{ keystone_admin_token | default(omit) }}
+    login_password={{ keystone_admin_password | default(omit) }}
+    login_user={{ keystone_admin_username | default(omit) }}
+    login_tenant_name={{ keystone_admin_tenant_name | default(omit) }}
   with_dict: keystone_users
-
-- name: Keystone Service - Create the keystone service python script
-  template: src=create_monasca_service.py.j2 dest={{ keystone_service_script }} mode=0700
-
-- name: Keystone Service - Execute the script
-  command: python {{ keystone_service_script }}

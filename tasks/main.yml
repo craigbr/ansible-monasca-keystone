@@ -11,7 +11,7 @@
   when: keystone_cacert is defined
 
 - name: Copy cacert file if given
-  copy: src={{ keystone_cacert }} dest={{ keystone_local_cacert }} mode=0744
+  copy: src={{ keystone_cacert }} dest={{ keystone_local_cacert }} mode=0644
   when: keystone_cacert is defined
 
 - name: Keystone Service - Create the keystone service python script

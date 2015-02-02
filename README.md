@@ -25,7 +25,7 @@ There are two ways to authenticate to Keystone:
 The variables are mutually exclusive, only one set can be defined.
 
 Keystone SSL:
-If the keystone server is using a self-signed SSL certificate, the `keystone_admin_cacert` can be used to specify a cacert so that SSL authentication will succeed.
+If the keystone server is using a self-signed SSL certificate, the variable `keystone_admin_cacert` can be used to specify a cacert so that SSL authentication will succeed. If the correct cacert is already on the remote system, the variable `keystone_local_cacert` can be used to give its location.
 
 As of this writing the [keystone-user](https://github.com/ansible/ansible-modules-core/blob/devel/cloud/openstack/keystone_user.py) module
 does not support a `cacert` parameter so it is not used.

@@ -114,7 +114,6 @@ def add_user_roles(key, users):
     key.roles.add_user_role(user, role, tenant)
   return True
 
-
 def add_service_endpoint(key, name, description, type, url):
   """Add the Monasca service to the catalog with the specified endpoint, if it doesn't yet exist."""
   service_names = { service.name: service.id for service in key.services.list() }
@@ -137,7 +136,7 @@ def add_monasca_service():
 
 
 def main():
-  """ Get token if needed and then call add_service_endpoint """
+  """ Get token if needed and then call methods to add tenants, users and roles """
   users = {
 {% for username, attributes in keystone_users.iteritems() %}
            '{{ username }}':

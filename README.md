@@ -13,12 +13,22 @@ keystone_users:
 It also creates a Monasca endpoint in keystone.
 
 Override default variables as necessary:
-  - `keystone_url` The url to connect to keystone with, must be a v2 endpoint
-  - `keystone_admin_token`
+  - `keystone_url` The url to connect to keystone with
   - `monasca_api_url` The url of the monasca api to be registered as the service endpoint in keystone
 
+Keystone Authentication:
+There are two ways to authenticate to Keystone:
+
+1: Use an Admin Token by setting `keystone_admin_token`
+2: Use an Admin User and Password by setting `keystone_admin_username`, `keystone_admin_password` and `keystone_admin_project`
+
+The variables are mutually exclusive, only one set can be defined.
+
+Keystone SSL:
+If the keystone server is using a self-signed SSL certificate, the `keystone_admin_cacert` can be used to specify a cacert so that SSL authentication will succeed.
+
 As of this writing the [keystone-user](https://github.com/ansible/ansible-modules-core/blob/devel/cloud/openstack/keystone_user.py) module
-does not support keystone v3 so the service endpoint script is also written to keystone v2.
+does not support a `cacert` parameter so it is not used.
 
 ##Requirements
 - Server running OpenStack Keystone

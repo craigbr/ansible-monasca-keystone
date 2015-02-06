@@ -125,7 +125,10 @@ def add_service_endpoint(key, name, description, type, url):
 
   for endpoint in key.endpoints.list():
     if endpoint.service_id == service_id:
-      return True
+      if endpoint.publicurl == url and endpoint.adminurl == url and endpoint.internalurl == url:
+        return True
+      else:
+        key.endpoints.delete(endpoint.id)
 
   key.endpoints.create(region="RegionOne", service_id=service_id, publicurl=url, adminurl=url, internalurl=url)
   return True

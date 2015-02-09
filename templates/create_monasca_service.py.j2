@@ -25,7 +25,7 @@ def get_token(url, cacert):
     return False
 
   if not tenant_name:
-    print('If token is not given, keystone_admin_tenant_name must be given', file=sys.stderr)
+    print('If token is not given, keystone_admin_project must be given', file=sys.stderr)
     return False
 
   kwargs = {

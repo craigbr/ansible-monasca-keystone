@@ -14,8 +14,8 @@ def get_token(url, cacert):
 {% else %}
   password = None
 {% endif %}
-{% if keystone_admin_tenant_name is defined %}
-  tenant_name = '{{ keystone_admin_tenant_name }}'
+{% if keystone_admin_project is defined %}
+  tenant_name = '{{ keystone_admin_project }}'
 {% else %}
   tenant_name = None
 {% endif %}
@@ -25,7 +25,7 @@ def get_token(url, cacert):
     return False
 
   if not tenant_name:
-    print('If token is not given, keystone_admin_tenant_name must be given', file=sys.stderr)
+    print('If token is not given, keystone_admin_project must be given', file=sys.stderr)
     return False
 
   kwargs = {

@@ -7,3 +7,4 @@ keystone_users:
     role: monasca-agent
 keystone_service_script: /usr/local/bin/create_monasca_service.py
 monasca_api_url: http://localhost:8080/v2.0
+skip_install: False

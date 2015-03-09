@@ -1,6 +1,6 @@
 ---
 - name: Keystone User - Install dependencies
-  apt: name=python-keystoneclient state=present
+  pip: name=python-keystoneclient state=present
   when: not skip_install
 
 # These tasks need a Keystone v2 endpoint

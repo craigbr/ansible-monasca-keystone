@@ -4,8 +4,8 @@ import sys
 
 
 def get_token(url, cacert):
-{% if keystone_admin_username is defined %}
-  username = '{{ keystone_admin_username }}'
+{% if keystone_admin is defined %}
+  username = '{{ keystone_admin }}'
 {% else %}
   username = None
 {% endif %}
@@ -21,7 +21,7 @@ def get_token(url, cacert):
 {% endif %}
 
   if not username or not password:
-    print('If token is not given, keystone_admin_username and keystone_admin_password must be given', file=sys.stderr)
+    print('If token is not given, keystone_admin and keystone_admin_password must be given', file=sys.stderr)
     return False
 
   if not tenant_name:

@@ -20,7 +20,7 @@ Keystone Authentication:
 There are two ways to authenticate to Keystone:
 
 1: Use an Admin Token by setting `keystone_admin_token`
-2: Use an Admin User and Password by setting `keystone_admin_username`, `keystone_admin_password` and `keystone_admin_project`
+2: Use an Admin User and Password by setting `keystone_admin`, `keystone_admin_password` and `keystone_admin_project`
 
 The variables are mutually exclusive, only one set can be defined.
 

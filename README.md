@@ -5,7 +5,7 @@ This role adds one or more users/projects/roles to Keystone, as specified in key
 
 ```
 keystone_users:
-  monasca-agent:
+  - username: monasca-agent
     password: some-password
     project: some-project
     role: monasca-agent

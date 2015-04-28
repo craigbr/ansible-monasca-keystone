@@ -1,6 +1,7 @@
 ---
 - name: Install virtualenv
   apt: name=python-virtualenv state=present
+  when: not skip_install
 
 - name: Keystone User - Install dependencies
   pip: name=python-keystoneclient state=present virtualenv="{{monasca_virtualenv_dir}}"

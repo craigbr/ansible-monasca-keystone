@@ -1,6 +1,8 @@
 ---
+- include_vars: "{{ ansible_distribution }}.yml"
+
 - name: Install virtualenv
-  apt: name=python-virtualenv state=present
+  apt: name="{{ virtualenv_pkg }}" state=present
   when: not skip_install
 
 - name: Keystone User - Install dependencies

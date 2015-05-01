@@ -1,6 +1,6 @@
 #Monasca Keystone
 Performs some Keystone setup for Monasca.
-The role requires python-keystoneclient and virtualenv be installed. By default it will use the virtualenv at monasca_virtualenv_dir.
+The role requires virtualenv be installed and will install python-keystoneclient. By default it will use the virtualenv at monasca_virtualenv_dir.
 This role adds one or more users/projects/roles to Keystone, as specified in keystone_users:
 
 ```

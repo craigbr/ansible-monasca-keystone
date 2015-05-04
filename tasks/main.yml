@@ -1,8 +1,4 @@
 ---
-- name: Keystone User - Install dependencies
-  pip: name=python-keystoneclient state=present virtualenv="{{monasca_virtualenv_dir}}"
-  when: not skip_install
-
 - name: Install deps to avoid pip doing compilation or enable it
   apt: name={{item}} state=present
   with_items: dependencies

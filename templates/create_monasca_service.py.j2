@@ -98,7 +98,7 @@ def add_user_roles(key, users):
     key.roles.add_user_role(keystone_user, role, tenant)
   return True
 
-def add_service_endpoint(key, name, description, type, url):
+def add_service_endpoint(key, name, description, type, url, region):
   """Add the Monasca service to the catalog with the specified endpoint, if it doesn't yet exist."""
   service_names = { service.name: service.id for service in key.services.list() }
   if name in service_names.keys():
@@ -114,7 +114,7 @@ def add_service_endpoint(key, name, description, type, url):
       else:
         key.endpoints.delete(endpoint.id)
 
-  key.endpoints.create(region="RegionOne", service_id=service_id, publicurl=url, adminurl=url, internalurl=url)
+  key.endpoints.create(region=region, service_id=service_id, publicurl=url, adminurl=url, internalurl=url)
   return True
 
 
@@ -174,7 +174,7 @@ def main():
   if not add_user_roles(key, users):
     return 1
 
-  if add_service_endpoint(key, 'monasca', 'Monasca monitoring service', 'monitoring', '{{ monasca_api_url }}'):
+  if add_service_endpoint(key, 'monasca', 'Monasca monitoring service', 'monitoring', '{{ monasca_api_url }}', '{{ keystone_region }}'):
     return 0
   else:
     return 1

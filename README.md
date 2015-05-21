@@ -36,6 +36,23 @@ does not support a `cacert` parameter so it is not used.
 
 ##Optional
 
+### Keystone service endpoints
+By default only single service endpoint is registered in Keystone. List of
+endpoints is held under `keystone_service_endpoints` variable. For adding new
+ones this variable has to be overridden. An example below illustrates how it
+should be defined:
+
+```yml
+keystone_service_endpoints:
+  - {name: "monasca", description: "Monasca monitoring service", type: "monitoring", url: "{{ monasca_api_url }}"}
+```
+
+Each entry must have following variables defined:
+   - `name`,
+   - `description`,
+   - `type`,
+   - `url`
+
 ##License
 Apache
 

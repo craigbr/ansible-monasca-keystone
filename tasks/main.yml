@@ -1,10 +1,19 @@
 ---
 # ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+# Copyright 2015 FUJITSU LIMITED
 
-- name: Install deps to avoid pip doing compilation or enable it
-  apt: name={{item}} state=present
-  with_items: dependencies
-  when: not skip_install
+- name: Gather OS Specific Variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "defaults.yml"
+
+- include: DebianInst.yml
+  when: ansible_os_family == 'Debian' and not skip_install
+- include: RedHatInst.yml
+  when: ansible_os_family == 'RedHat' and not skip_install
 
 - name: Keystone User - Install dependencies
   pip: name=python-keystoneclient state=present virtualenv="{{monasca_virtualenv_dir}}"

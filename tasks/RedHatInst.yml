@@ -7,7 +7,7 @@
     - "{{ dependencies }}"
 
 - name: Virtualenv from pypi
-  pip: name=virtualenv  extra_args='--upgrade' state=present
+  pip: name=virtualenv  version=13.1.2 extra_args='--upgrade' state=present
 
 - name: Setuptools from pypi
   pip: name=setuptools extra_args='--upgrade' state=present virtualenv="{{ monasca_virtualenv_dir }}"
